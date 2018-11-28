@@ -14,17 +14,44 @@
 # limitations under the License.
 #
 
+# Check for the target product.
+ifeq (pa_rolex,$(TARGET_PRODUCT))
+
+DEVICE_PATH := device/xiaomi/rolex
+
+$(call inherit-product, $(DEVICE_PATH)/device.mk)
+
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit from rolex device
-$(call inherit-product, device/xiaomi/rolex/device.mk)
+# Set bootanimation to 720p display.
+TARGET_BOOT_ANIMATION_RES := 720
+TARGET_ARCH := arm64
+TARGET_DENSITY := xhdpi
 
-# Device identifier. This must come after all inclusions
-TARGET_VENDOR := Xiaomi
+# Most advanced platform features, first.
+#TARGET_WANTS_EXTENDED_DPM_PLATFORM := true
+
+# Inherit from our common CAF device tree.
+include device/qcom/common/common.mk
+
 PRODUCT_DEVICE := rolex
-PRODUCT_NAME := full_rolex
-PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := Redmi 4A
 PRODUCT_MANUFACTURER := Xiaomi
+PRODUCT_NAME := pa_rolex
+BOARD_VENDOR := Xiaomi
+PRODUCT_BRAND := Xiaomi
+
+PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
+
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    PRIVATE_BUILD_DESC="rolex-user 7.1.2 N2G47H V9.2.6.0.NCCMIEK release-keys"
+
+# Set BUILD_FINGERPRINT variable
+BUILD_FINGERPRINT := "Xiaomi/rolex/rolex:7.1.2/N2G47H/V9.2.6.0.NCCMIEK:user/release-keys"
+
+# Paranoid Android platform
+include vendor/pa/main.mk
+
+endif
